@@ -1,3 +1,3 @@
 class BearerSerializer < ApplicationSerializer
-  fields :name
+  field :name
 end

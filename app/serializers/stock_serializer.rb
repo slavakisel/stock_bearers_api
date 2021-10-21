@@ -1,5 +1,5 @@
 class StockSerializer < ApplicationSerializer
-  fields :name
+  field :name
 
   association :bearer, blueprint: BearerSerializer
 end

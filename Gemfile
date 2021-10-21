@@ -11,8 +11,10 @@ gem 'puma', '~> 5.0'
 gem 'bootsnap', '>= 1.4.4', require: false
 
 gem 'blueprinter'
+gem 'kaminari'
 
 gem 'interactor'
+
 
 group :development, :test do
   gem 'factory_bot_rails'

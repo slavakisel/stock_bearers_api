@@ -99,4 +99,22 @@ describe "/v1/stocks", type: :request do
       end
     end
   end
+
+  describe "GET /v1/stocks" do
+    let!(:stocks) { create_list(:stock, 2) }
+
+    it "renders stocks with pagination meta" do
+      get "/v1/stocks"
+
+      expect(response.code).to eq "200"
+
+      expect(json_response_body).to include(
+        stocks: StockSerializer.render_as_json(stocks).map(&:deep_symbolize_keys),
+        meta: {
+          current_page: 1,
+          total_pages: 1
+        }
+      )
+    end
+  end
 end

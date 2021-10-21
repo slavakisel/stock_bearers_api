@@ -1,12 +1,18 @@
 module V1
   class StocksController < ApplicationController
+    def index
+      stocks = Stock.page(params[:page]).per(50)
+
+      respond_with(stocks, serializer_opts: { root: :stocks, meta: pagination_meta(stocks) })
+    end
+
     def create
       result = Stocks::Create.call(stock_params)
 
       if result.success?
-        render json: StockSerializer.render(result.stock), status: :created
+        respond_with(result.stock, status: :created)
       else
-        render json: { errors: result.errors }, status: :unprocessable_entity
+        respond_with_error(result.errors)
       end
     end
 
@@ -15,9 +21,9 @@ module V1
       result = Stocks::Update.call(stock: stock, **stock_params)
 
       if result.success?
-        render json: StockSerializer.render(result.stock)
+        respond_with(result.stock)
       else
-        render json: { errors: result.errors }, status: :unprocessable_entity
+        respond_with_error(result.errors)
       end
     end
 
@@ -25,6 +31,17 @@ module V1
 
     def stock_params
       params.require(:stock).permit(:name, :bearer_name)
+    end
+
+    def respond_with(stock_payload, options = {})
+      serializer_opts = options.fetch(:serializer_opts, {})
+      render_opts = options.except(:serializer_opts)
+
+      render json: StockSerializer.render(stock_payload, **serializer_opts), **render_opts
+    end
+
+    def respond_with_error(error_payload)
+      render json: { errors: error_payload }, status: :unprocessable_entity
     end
   end
 end

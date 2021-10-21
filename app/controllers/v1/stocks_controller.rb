@@ -1,7 +1,7 @@
 module V1
   class StocksController < ApplicationController
     def index
-      stocks = Stock.page(params[:page]).per(50)
+      stocks = stocks_scope.page(params[:page]).per(50)
 
       respond_with(stocks, serializer_opts: { root: :stocks, meta: pagination_meta(stocks) })
     end
@@ -17,7 +17,7 @@ module V1
     end
 
     def update
-      stock = Stock.find(params[:id])
+      stock = stocks_scope.find(params[:id])
       result = Stocks::Update.call(stock: stock, **stock_params)
 
       if result.success?
@@ -27,7 +27,18 @@ module V1
       end
     end
 
+    def destroy
+      stock = stocks_scope.find(params[:id])
+      stock.discard
+
+      render json: {}, status: :ok
+    end
+
     private
+
+    def stocks_scope
+      Stock.kept
+    end
 
     def stock_params
       params.require(:stock).permit(:name, :bearer_name)

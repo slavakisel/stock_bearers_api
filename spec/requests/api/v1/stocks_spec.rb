@@ -5,7 +5,7 @@ describe "/v1/stocks", type: :request do
     let(:params) {{ stock: { name: "Stock", bearer_name: "Bearer" }}}
 
     it "creates stock and bearer" do
-      expect { post "/v1/stocks", params: params }.
+      expect { post v1_stocks_path, params: params }.
         to change { Stock.count }.by(1).and change { Bearer.count }.by(1)
 
       expect(response.code).to eq "201"
@@ -24,7 +24,7 @@ describe "/v1/stocks", type: :request do
       let(:params) {{ stock: { name: "", bearer_name: "Bearer" }}}
 
       it "renders stock errors" do
-        expect { post "/v1/stocks", params: params }.
+        expect { post v1_stocks_path, params: params }.
           to change { Stock.count }.by(0).and change { Bearer.count }.by(0)
 
         expect(response.code).to eq "422"
@@ -43,7 +43,7 @@ describe "/v1/stocks", type: :request do
     let!(:stock) { create(:stock, bearer: bearer, name: "Stock") }
 
     it "creates stock and bearer" do
-      put "/v1/stocks/#{stock.id}", params: params
+      put v1_stock_path(stock), params: params
 
       expect(response.code).to eq "200"
 
@@ -61,7 +61,7 @@ describe "/v1/stocks", type: :request do
       let(:params) {{ stock: { name: "", bearer_name: "Bearer" }}}
 
       it "renders stock errors" do
-        put "/v1/stocks/#{stock.id}", params: params
+        put v1_stock_path(stock), params: params
 
         expect(response.code).to eq "422"
 
@@ -75,7 +75,7 @@ describe "/v1/stocks", type: :request do
       let(:params) {{ stock: { name: "", bearer_name: "Bearer" }}}
 
       it "renders not found error" do
-        put "/v1/stocks/0", params: params
+        put v1_stock_path(0), params: params
 
         expect(response.code).to eq "404"
 
@@ -89,7 +89,7 @@ describe "/v1/stocks", type: :request do
       let(:params) {{}}
 
       it "renders bad request error" do
-        put "/v1/stocks/#{stock.id}", params: params
+        put v1_stock_path(stock), params: params
 
         expect(response.code).to eq "400"
 
@@ -104,7 +104,7 @@ describe "/v1/stocks", type: :request do
     let!(:stocks) { create_list(:stock, 2) }
 
     it "renders stocks with pagination meta" do
-      get "/v1/stocks"
+      get v1_stocks_path
 
       expect(response.code).to eq "200"
 
@@ -115,6 +115,20 @@ describe "/v1/stocks", type: :request do
           total_pages: 1
         }
       )
+    end
+  end
+
+  describe "DELETE /v1/stocks/:id" do
+    let!(:stock) { create(:stock) }
+
+    it "soft deletes stock" do
+      delete v1_stock_path(stock)
+
+      expect(response.code).to eq "200"
+
+      get v1_stocks_path
+
+      expect(json_response_body).to include(stocks: [])
     end
   end
 end

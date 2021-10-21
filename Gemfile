@@ -10,11 +10,13 @@ gem 'puma', '~> 5.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
+# for API responses rendering
 gem 'blueprinter'
 gem 'kaminari'
 
-gem 'interactor'
+gem 'interactor' # for services with control flow
 
+gem 'discard', '~> 1.2' # soft deletes records
 
 group :development, :test do
   gem 'factory_bot_rails'

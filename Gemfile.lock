@@ -68,6 +68,8 @@ GEM
     concurrent-ruby (1.1.9)
     crass (1.0.6)
     diff-lcs (1.4.4)
+    discard (1.2.0)
+      activerecord (>= 4.2, < 7)
     erubi (1.10.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
@@ -190,6 +192,7 @@ PLATFORMS
 DEPENDENCIES
   blueprinter
   bootsnap (>= 1.4.4)
+  discard (~> 1.2)
   factory_bot_rails
   interactor
   kaminari

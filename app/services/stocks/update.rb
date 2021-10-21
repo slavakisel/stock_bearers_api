@@ -30,11 +30,12 @@ module Stocks
     end
 
     def bearer
-      context.bearer ||= if bearer_name.present?
-        Bearers::FindOrInitialize.new(bearer_name).run
-      else
-        stock.bearer
-      end
+      context.bearer ||=
+        if bearer_name.present?
+          Bearers::FindOrInitialize.new(bearer_name).run
+        else
+          stock.bearer
+        end
     end
 
     def collect_errors

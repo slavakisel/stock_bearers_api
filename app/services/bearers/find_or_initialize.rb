@@ -11,7 +11,9 @@ module Bearers
     end
 
     def find_bearer
-      Bearer.where("lower(name) = ?", bearer_name&.downcase).first
+      return if bearer_name.blank?
+
+      Bearer.where("lower(name) = ?", bearer_name.downcase).first
     end
   end
 end

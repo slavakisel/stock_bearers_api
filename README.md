@@ -1,24 +1,48 @@
-# README
+# Setup and run server
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```
+bin/setup
+bin/server
+```
 
-Things you may want to cover:
+# API endpoints
 
-* Ruby version
+## Create Stock
 
-* System dependencies
+```bash
+curl -X POST http://localhost:3000/v1/stocks -H 'Content-Type: application/json' \
+  -d '{"stock":{"name":"Stock Name","bearer_name":"Bearer Name"}}'
+```
 
-* Configuration
+## Update stock
 
-* Database creation
+```bash
+curl -X PUT http://localhost:3000/v1/stocks/1 -H 'Content-Type: application/json' \
+  -d '{"stock":{"name":"Updated Name"}}'
+```
 
-* Database initialization
+### Link stock to another bearer
 
-* How to run the test suite
+```bash
+curl -X PUT http://localhost:3000/v1/stocks/1 -H 'Content-Type: application/json' \
+  -d '{"stock":{"name":"Updated Name","bearer_name":"Another Bearer"}}'
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### Soft delete stock
 
-* Deployment instructions
+```bash
+curl -X DELETE http://localhost:3000/v1/stocks/1
+```
 
-* ...
+### List all stocks
+
+
+```bash
+curl http://localhost:3000/v1/stocks -H 'Content-Type: application/json'
+```
+
+# Specs
+
+```
+bin/rspec spec/
+```

@@ -4,6 +4,17 @@ module V1
       result = Stocks::Create.call(stock_params)
 
       if result.success?
+        render json: StockSerializer.render(result.stock), status: :created
+      else
+        render json: { errors: result.errors }, status: :unprocessable_entity
+      end
+    end
+
+    def update
+      stock = Stock.find(params[:id])
+      result = Stocks::Update.call(stock: stock, **stock_params)
+
+      if result.success?
         render json: StockSerializer.render(result.stock)
       else
         render json: { errors: result.errors }, status: :unprocessable_entity

@@ -22,23 +22,19 @@ module Stocks
       false
     end
 
-    def collect_errors
-      context.errors = {
-        stock: stock.errors,
-        bearer: bearer.errors
-      }
-    end
-
     def stock
       context.stock ||= Stock.new(name: name, bearer: bearer)
     end
 
     def bearer
-      context.bearer ||= (find_bearer || Bearer.new(name: bearer_name))
+      context.bearer ||= Bearers::FindOrInitialize.new(bearer_name).run
     end
 
-    def find_bearer
-      Bearer.where("lower(name) = ?", bearer_name&.downcase).first
+    def collect_errors
+      context.errors = {
+        stock: stock.errors,
+        bearer: bearer.errors
+      }
     end
   end
 end
